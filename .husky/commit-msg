@@ -1,0 +1,35 @@
+#Cores
+NC='\033[0m'
+
+BBlue='\033[1;34m'
+
+BRed='\033[1;31m'
+
+REGEX_ISSUE_ID="[a-zA-Z0-9,\.\_\-]+-[0-9]+"
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+ISSUE_ID=$(echo "$BRANCH_NAME" | grep -o -E "$REGEX_ISSUE_ID")
+COMMIT_MESSAGE=$(cat "$1")
+
+
+ if [ -z "$ISSUE_ID" ]; then
+
+    echo -e "${BRed}Branch não está no padrão que deveria mestre... ${NC}"
+    exit 1
+
+ fi
+
+
+#Prevent adding a  issue key in commits that already have a JIRA issue key
+#i.g. HEY-1: HEY-1: my feature
+
+ case "$COMMIT_MESSAGE" in
+
+    "$ISSUE_ID"*) exit 0 ;;
+
+ esac
+
+echo "$ISSUE_ID: $COMMIT_MESSAGE" >$1
+
+
+
+
