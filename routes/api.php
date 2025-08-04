@@ -20,10 +20,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/users', function () {
-    return User::all();
-});
+// Route::get('/users', function () {
+//     return User::all();
+// });
 
+Route::get('/', function() {
+    return response()->json('Bem vindo a API Hey-Professor');
+});
 
 //region Authecnticated
 Route::middleware('auth:sanctum')->group(function() {
