@@ -43,4 +43,21 @@ test('after create a new question, I nedde to make sure that it creates on _draf
         'question' => 'Loren ipsun teste?'
     ]);
 
+});
+
+describe('validation rules', function () {
+    test('question::required', function () {
+        $user =  User::factory()->create();
+
+    // actingAs($user);
+
+    Sanctum::actingAs($user);
+
+    postJson(route('questions.store', []))
+    ->assertJsonValidationErrors([
+        'question'  => 'required',
+    ]);
+
+
+    });
 })->only();
