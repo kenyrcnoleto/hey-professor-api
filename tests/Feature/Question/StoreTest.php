@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Rules\WithQuestionMark;
 use Laravel\Sanctum\Sanctum;
 use PhpParser\Node\Expr\PostDec;
 
@@ -60,4 +61,19 @@ describe('validation rules', function () {
 
 
     });
-})->only();
+});
+
+test('question::ending with question mark', function () {
+        $user =  User::factory()->create();
+
+    // actingAs($user);
+
+    Sanctum::actingAs($user);
+
+    postJson(route('questions.store', [
+        'question' => 'Question without a question mark'
+    ]))
+    ->assertJsonValidationErrors([
+        'question'  => 'The question should end withe quetion mark (?).',
+    ]);
+});
