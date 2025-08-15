@@ -126,6 +126,8 @@ test('after creating we should return a stutus 201 with the created question', f
         ]))
         ->assertCreated();
 
+        //dd($request->json());
+
         $question = Question::latest()->first();
 
         $request->assertJson([
@@ -134,8 +136,12 @@ test('after creating we should return a stutus 201 with the created question', f
                 'id' => $question->id,
                 'question' => $question->question,
                 'status'    => $question->status,
-                'created_at' => $question->created_at->format('Y-m-d'),
-                'updated_at' => $question->updated_at->format('Y-m-d'),
+                'created_by' => [
+                    'id'    => $user->id,
+                    'name'  => $user->name,
+                ],
+                'created_at' => $question->created_at->format('Y-m-d h:i:a'),
+                'updated_at' => $question->updated_at->format('Y-m-d h:i:a'),
             ]
         ]);
 });
