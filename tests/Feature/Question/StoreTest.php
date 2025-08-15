@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Question;
 use App\Models\User;
 use App\Rules\WithQuestionMark;
 use Laravel\Sanctum\Sanctum;
@@ -61,34 +62,54 @@ describe('validation rules', function () {
 
 
     });
+    test('question::ending with question mark', function () {
+            $user =  User::factory()->create();
+
+        // actingAs($user);
+
+        Sanctum::actingAs($user);
+
+        postJson(route('questions.store', [
+            'question' => 'Question without a question mark'
+        ]))
+        ->assertJsonValidationErrors([
+            'question'  => 'The question should end withe quetion mark (?).',
+        ]);
+    });
+
+    test('question::min caracters should be 10', function () {
+            $user =  User::factory()->create();
+
+        // actingAs($user);
+
+        Sanctum::actingAs($user);
+
+        postJson(route('questions.store', [
+            'question' => 'Question?'
+        ]))
+        ->assertJsonValidationErrors([
+            'question'  => 'The question field must be at least 10 characters.',
+        ]);
+    });
+
+    test('question::should be unique', function () {
+
+        $user =  User::factory()->create();
+        Question::factory()->create(['question' => 'Loren ipsun teste?',
+                                    'user_id' => $user->id,
+                                    'status' => 'draft'
+                                ]);
+
+        // actingAs($user);
+
+        Sanctum::actingAs($user);
+
+        postJson(route('questions.store', [
+            'question' => 'Loren ipsun teste?'
+        ]))
+        ->assertJsonValidationErrors([
+            'question'  => 'The question has already been taken.',
+        ]);
+    });
 });
 
-test('question::ending with question mark', function () {
-        $user =  User::factory()->create();
-
-    // actingAs($user);
-
-    Sanctum::actingAs($user);
-
-    postJson(route('questions.store', [
-        'question' => 'Question without a question mark'
-    ]))
-    ->assertJsonValidationErrors([
-        'question'  => 'The question should end withe quetion mark (?).',
-    ]);
-});
-
-test('question::min caracters should be 10', function () {
-        $user =  User::factory()->create();
-
-    // actingAs($user);
-
-    Sanctum::actingAs($user);
-
-    postJson(route('questions.store', [
-        'question' => 'Question?'
-    ]))
-    ->assertJsonValidationErrors([
-        'question'  => 'The question field must be at least 10 characters.',
-    ]);
-})->only();
