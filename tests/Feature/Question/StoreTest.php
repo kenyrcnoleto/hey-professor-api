@@ -140,8 +140,8 @@ test('after creating we should return a stutus 201 with the created question', f
                     'id'    => $user->id,
                     'name'  => $user->name,
                 ],
-                'created_at' => $question->created_at->format('Y-m-d h:i:a'),
-                'updated_at' => $question->updated_at->format('Y-m-d h:i:a'),
+                'created_at' => $question->created_at->format('Y-m-d h:i:s'),
+                'updated_at' => $question->updated_at->format('Y-m-d h:i:s'),
             ]
         ]);
 });
