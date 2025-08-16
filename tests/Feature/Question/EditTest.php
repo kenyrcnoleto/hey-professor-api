@@ -35,29 +35,30 @@ describe('validation rules', function () {
         $user =  User::factory()->create();
         $question =  Question::factory()->create(['user_id' => $user->id]);
 
-    // actingAs($user);
+        // actingAs($user);
 
-    Sanctum::actingAs($user);
+        Sanctum::actingAs($user);
 
-    putJson(route('questions.update', $question), [
-        'question' => ''
-    ])
-    ->assertJsonValidationErrors([
-        'question'  => 'required',
-    ]);
+        putJson(route('questions.update', $question), [
+            'question' => ''
+        ])
+        ->assertJsonValidationErrors([
+            'question'  => 'required',
+        ]);
 
 
-    })->only();
+    });
     test('question::ending with question mark', function () {
-            $user =  User::factory()->create();
+        $user =  User::factory()->create();
+        $question =  Question::factory()->create(['user_id' => $user->id]);
 
         // actingAs($user);
 
         Sanctum::actingAs($user);
 
-        postJson(route('questions.store', [
-            'question' => 'Question without a question mark'
-        ]))
+        putJson(route('questions.update', $question), [
+            'question' => 'Question should have a mark'
+        ])
         ->assertJsonValidationErrors([
             'question'  => 'The question should end withe quetion mark (?).',
         ]);
@@ -65,14 +66,15 @@ describe('validation rules', function () {
 
     test('question::min caracters should be 10', function () {
             $user =  User::factory()->create();
+        $question =  Question::factory()->create(['user_id' => $user->id]);
 
         // actingAs($user);
 
         Sanctum::actingAs($user);
 
-        postJson(route('questions.store', [
+        putJson(route('questions.update', $question), [
             'question' => 'Question?'
-        ]))
+        ])
         ->assertJsonValidationErrors([
             'question'  => 'The question field must be at least 10 characters.',
         ]);
@@ -81,20 +83,46 @@ describe('validation rules', function () {
     test('question::should be unique', function () {
 
         $user =  User::factory()->create();
-        Question::factory()->create(['question' => 'Loren ipsun teste?',
+         Question::factory()->create([
+                                    'question' => 'Loren ipsun teste?',
                                     'user_id' => $user->id,
                                     'status' => 'draft'
+                                ]);
+
+        $question = Question::factory()->create([
+                'user_id' => $user->id,
+            ]
+        );
+
+
+        // actingAs($user);
+
+        Sanctum::actingAs($user);
+
+        putJson(route('questions.update', $question),  [
+            'question' => 'Loren ipsun teste?'
+        ])
+        ->assertJsonValidationErrors([
+            'question'  => 'The question has already been taken.',
+        ]);
+    });
+
+    test('question::should be unique only if id is different', function () {
+
+        $user =  User::factory()->create();
+        $question = Question::factory()->create([
+                                    'question' => 'Loren ipsun teste?',
+                                    'user_id' => $user->id,
                                 ]);
 
         // actingAs($user);
 
         Sanctum::actingAs($user);
 
-        postJson(route('questions.store', [
+        putJson(route('questions.update', $question),  [
             'question' => 'Loren ipsun teste?'
-        ]))
-        ->assertJsonValidationErrors([
-            'question'  => 'The question has already been taken.',
-        ]);
+        ])
+        ->assertOk();
     });
+
 });
