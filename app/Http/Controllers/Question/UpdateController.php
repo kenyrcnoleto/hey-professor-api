@@ -16,6 +16,8 @@ class UpdateController extends Controller
     public function __invoke(UpdateRequest $request, Question $question)
     {
         //dd($question);
+        //$this->authorize('update', $question);
+
         $question->question = $request->question;
         $question->save();
 
