@@ -35,10 +35,10 @@ class UpdateRequest extends FormRequest
             'question' => [
                 'required',
                 new WithQuestionMark(),
-                new OnlyAsDraft($this->route()->question),
+                new OnlyAsDraft($this->route('question')),
                 'min:10',
                 // 'unique:questions,'.$this->route()->question->id,
-                //Rule::unique('questions')->ignore($this->route()->question->id)
+                //Rule::unique('questions')->ignore($this->route()->question->id) //route()->question - encontra erro no larastan
                 Rule::unique('questions', 'question')->ignore($this->route('question')->id), //@phpstan-ignore-line
             ],
         ];

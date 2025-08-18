@@ -134,7 +134,7 @@ describe('validation rules', function () {
         ->assertJsonValidationErrors([
             'question' => 'The question should be a draft to be able edit',
         ]);
-    })->only();
+    });
 
 });
 

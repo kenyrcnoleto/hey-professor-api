@@ -20,7 +20,7 @@ class OnlyAsDraft implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if ($this->question->statu != 'draft') {
+        if ($this->question->status != 'draft') {
             $fail('The question should be a draft to be able edit.');
         }
     }
