@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Question;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\{Question, User};
 
 class QuestionPolicy
 {
@@ -15,6 +13,5 @@ class QuestionPolicy
     {
         return $user->is($question->user);
     }
-
 
 }
