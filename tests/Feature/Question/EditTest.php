@@ -171,8 +171,6 @@ test('after creating we should return a stutus 200 with the created question', f
     ])
     ->assertOk();
 
-    //dd($request->json());
-
     $question = Question::latest()->first();
 
     $request->assertJson([
