@@ -24,15 +24,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return User::all();
 // });
 
-Route::get('/', function() {
+Route::get('/', function () {
     return response()->json('Bem vindo a API Hey-Professor');
 });
 
 //region Authecnticated
-Route::middleware('auth:sanctum')->group(function() {
+Route::middleware('auth:sanctum')->group(function () {
 
     //region Questions
     Route::post('questions', Question\StoreController::class)->name('questions.store');
+    Route::put('questions/{question}', Question\UpdateController::class)->name('questions.update');
 
     //endregion
 });
