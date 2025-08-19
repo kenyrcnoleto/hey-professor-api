@@ -28,20 +28,6 @@ COMMIT_MESSAGE=$(cat "$1")
 
  esac
 
- #Formatar cada arquivo alterado usando o Laravel pint
-
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep ".php\{0,1\}$") || true;
-
-
-for FILE in $STAGED_FILES
-
-do
-    #./vendor/bin/pint "${FILE}" > /dev/null >&1;
-    ./vendor/bin/pint "${FILE}";
-    git add "${FILE}"
-
-done;
-
 echo "$ISSUE_ID: $COMMIT_MESSAGE" >$1
 
 

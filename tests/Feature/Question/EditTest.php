@@ -159,7 +159,7 @@ describe('security', function () {
 });
 
 test('after creating we should return a stutus 200 with the created question', function () {
-    $user = User::factory()->create();
+    $user     = User::factory()->create();
     $question = Question::factory()->for($user, 'user')->create();
 
     //dd($question->toArray(), $user->toArray());
@@ -188,4 +188,3 @@ test('after creating we should return a stutus 200 with the created question', f
         ],
     ]);
 });
-
