@@ -157,3 +157,37 @@ describe('security', function () {
         ]);
     });
 });
+
+test('after creating we should return a stutus 200 with the created question', function () {
+    $user = User::factory()->create();
+    $question = Question::factory()->for($user, 'user')->create();
+
+    //dd($question->toArray(), $user->toArray());
+
+    Sanctum::actingAs($user);
+
+    $request = putJson(route('questions.update', $question), [
+        'question' => 'Loren ipsun teste?',
+    ])
+    ->assertOk();
+
+    //dd($request->json());
+
+    $question = Question::latest()->first();
+
+    $request->assertJson([
+        'data' => [
+
+            'id'         => $question->id,
+            'question'   => $question->question,
+            'status'     => $question->status,
+            'created_by' => [
+                'id'   => $user->id,
+                'name' => $user->name,
+            ],
+            'created_at' => $question->created_at->format('Y-m-d h:i:s'),
+            'updated_at' => $question->updated_at->format('Y-m-d h:i:s'),
+        ],
+    ]);
+});
+

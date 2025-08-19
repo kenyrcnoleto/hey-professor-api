@@ -16,7 +16,7 @@ class QuestionResource extends JsonResource
     {
         /** @var \App\Models\Question $this */
         return [
-            'id'         => $this->id,
+            'id'            => $this->id,
             'question'   => $this->question,
             'status'     => $this->status,
             'created_by' => [
