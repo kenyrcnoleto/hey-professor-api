@@ -21,6 +21,10 @@ class RegisterController extends Controller
             'password' => ['required', 'min:8', 'max:40'],
         ]);
 
-        User::create($data);
+        $user = User::create($data);
+
+        //dd($user);
+
+        auth()->login($user);
     }
 }
