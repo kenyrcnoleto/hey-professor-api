@@ -13,13 +13,13 @@ class LoginController extends Controller
      */
     public function __invoke(Request $request)
     {
-        // $data = request()->validate([
-        //     'email' =>  ['required', 'email'],
-        //     'password'  =>  ['required'],
-        // ]);
+        $data = request()->validate([
+            'email'    => 'required',
+            'password' => 'required',
+        ]);
         // return response()->json($request->all());
 
-        if (!auth()->attempt($request->only('email', 'password'))) {
+        if (!auth()->attempt($data)) {
 
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),

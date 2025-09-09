@@ -25,8 +25,11 @@ Route::get('/', function () {
     return response()->json('Bem vindo a API Hey-Professor');
 });
 
-Route::post('login', LoginController::class)->name('login');
-Route::post('register', RegisterController::class)->name('register');
+Route::middleware(['guest', 'web'])->group(function () {
+
+    Route::post('login', LoginController::class)->name('login');
+    Route::post('register', RegisterController::class)->name('register');
+});
 
 //region Authecnticated
 Route::middleware('auth:sanctum')->group(function () {
