@@ -9,9 +9,10 @@ use function PHPUnit\Framework\assertTrue;
 test('should be able to register in the application', function () {
 
     postJson(route('register'), [
-        'name'     => 'John Doe',
-        'email'    => 'joe@doe.com',
-        'password' => 'password',
+        'name'               => 'John Doe',
+        'email'              => 'joe@doe.com',
+        'email_confirmation' => 'joe@doe.com',
+        'password'           => 'password',
     ])->assertSessionHasNoErrors();
 
     assertDatabaseHas('users', [
@@ -26,9 +27,10 @@ test('should be able to register in the application', function () {
 
 test('should log the new user in the system', function () {
     postJson(route('register'), [
-        'name'     => 'John Doe',
-        'email'    => 'joe@doe.com',
-        'password' => 'password',
+        'name'               => 'John Doe',
+        'email'              => 'joe@doe.com',
+        'email_confirmation' => 'joe@doe.com',
+        'password'           => 'password',
     ])->assertOk();
 
     $user = User::first();
@@ -56,7 +58,12 @@ describe('validations', function () {
     ]);
 
     test('email', function ($rule, $value, $meta = []) {
-        //dd($rule, $value);
+        // dd($rule, $value);
+
+        if ($rule == 'unique') {
+            User::factory()->create(['email' => $value]);
+        }
+
         postJson(route('register'), [
             'email' => $value,
         ])->assertJsonValidationErrors([
@@ -67,10 +74,12 @@ describe('validations', function () {
         ]);
 
     })->with([
-        'required' => ['required', ''],
-        'min:3'    => ['min', 'AB', ['min' => 3]],
-        'max:255'  => ['max', str_repeat('*', 256), ['max' => 255]],
-        'email'    => ['email', 'not-email'],
+        'required'  => ['required', ''],
+        'min:3'     => ['min', 'AB', ['min' => 3]],
+        'max:255'   => ['max', str_repeat('*', 256), ['max' => 255]],
+        'email'     => ['email', 'not-email'],
+        'unique'    => ['unique', 'joe@doe.com'],
+        'confirmed' => ['confirmed', 'joe@doe.com'],
     ]);
 
     test('password', function ($rule, $value, $meta = []) {
