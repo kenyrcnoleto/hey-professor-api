@@ -3,7 +3,7 @@
 use App\Models\{Question, User};
 use Laravel\Sanctum\Sanctum;
 
-use function Pest\Laravel\getJson;
+use function Pest\Laravel\{getJson, withoutExceptionHandling};
 
 test('it should list only questions that the logged user has been created :: published', function () {
     $user = User::factory()->create();
@@ -107,6 +107,8 @@ test('making sure that only, dratt, puplishe, and archived can be passed to the 
     Sanctum::actingAs(
         User::factory()->create(),
     );
+
+    // withoutExceptionHandling(); ->Forma de ver o erro ignorando o erro 500
 
     getJson(route('my-questions', ['status' => $status]))
     ->assertStatus($code);
