@@ -35,4 +35,4 @@ test('it should be able to list only a published a question', function () {
         //'id' =>  $draft->id,
         'question' => $draft->question,
     ]);
-})->only();
+});
