@@ -101,3 +101,18 @@ test('it should list only questions that the logged user has been created :: arc
     ]);
 
 });
+
+test('making sure that only, dratt, puplishe, and archived can be passed to the route', function ($status, $code) {
+
+    Sanctum::actingAs(
+        User::factory()->create(),
+    );
+
+    getJson(route('my-questions', ['status' => $status]))
+    ->assertStatus($code);
+})->with([
+    'draft'     => ['draft', 200],
+    'published' => ['published', 200],
+    'archived'  => ['archived', 200],
+    'thing'     => ['thing', 422],
+]);
