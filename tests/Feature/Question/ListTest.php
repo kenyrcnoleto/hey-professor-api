@@ -36,3 +36,34 @@ test('it should be able to list only a published a question', function () {
         'question' => $draft->question,
     ]);
 });
+
+test('it shoul be ablet to search for a question', function () {
+    Sanctum::actingAs(User::factory()->create());
+
+    $first = Question::factory()->published()->create([
+        'question' => 'First question?',
+    ]);
+    $second = Question::factory()->published()->create([
+        'question' => 'Second question?',
+    ]);
+
+    getJson(route('questions.index', ['q' => 'first']))
+        ->assertOk()
+        ->assertJsonFragment([
+            //'id'       => $first->id,
+            'question' => $first->question,
+        ])->assertJsonMissing([
+            //'id'       => $second->id,
+            'question' => $second->question,
+        ]);
+
+    getJson(route('questions.index', ['q' => 'second']))
+        ->assertOk()
+        ->assertJsonFragment([
+            //'id'       => $second->id,
+            'question' => $second->question,
+        ])->assertJsonMissing([
+            //'id'       => $first->id,
+            'question' => $first->question,
+        ]);
+});
