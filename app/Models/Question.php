@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\{Model, SoftDeletes};
+use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
 
 class Question extends Model
 {
@@ -15,4 +15,19 @@ class Question extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', '=', 'published');
+    }
+
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        if ($search) {
+            return $query->when($search, fn (Builder $query) => $query->where('question', 'like', '%' . $search . '%'));
+        }
+
+        return $query;
+    }
+
 }
