@@ -34,7 +34,7 @@ class MineController extends Controller
                 fn (Builder $query) => $query->where('status', '=', $status),
             )
             // ->withTrashed()
-            ->get();
+            ->paginate();
 
         return QuestionResource::collection($question);
     }
