@@ -24,3 +24,23 @@ test('it should be able to like a question', function () {
         'like'        => true,
     ]);
 });
+
+test('it should be able to unlike a question', function () {
+    $user = Sanctum::actingAs(User::factory()->create());
+
+    $question = Question::factory()->published()->create();
+
+    postJson(route('question.vote', [
+        'question' => $question,
+        'vote'     => 'unlike',
+    ]))->assertNoContent();
+
+    expect($question)
+        ->votes()->count()->toBe(1);
+
+    assertDatabaseHas('votes', [
+        'question_id' => $question->id,
+        'user_id'     => $user->id,
+        'unlike'      => true,
+    ]);
+});
