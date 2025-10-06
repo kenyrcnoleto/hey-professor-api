@@ -60,3 +60,22 @@ test('it should guarentee that only the words like and unlike are been used to v
     'unlike'  => ['unlike', 204],
     'invalid' => ['invalid', 422],
 ]);
+
+test('it should make sure that when is set like to true, and set unlike is set to false', function () {
+    $user = Sanctum::actingAs(User::factory()->create());
+
+    $question = Question::factory()->published()->create();
+    $question->votes()->create([
+        'user_id' => $user->id,
+        'unlike'  => true,
+    ]);
+
+    postJson(route('question.vote', [
+        'question' => $question,
+        'vote'     => 'like',
+    ]))->assertNoContent();
+
+    expect($question->votes)
+        ->toHaveCount(1)
+        ->and($question->votes->first())->like->toBe(1)->unlike->toBe(0);
+});
