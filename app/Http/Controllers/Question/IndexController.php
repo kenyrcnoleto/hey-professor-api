@@ -18,6 +18,8 @@ class IndexController extends Controller
                 ->published()
                 //->when($search, fn(Builder $query) => $query->where('question', 'like', '%' . $search . '%'))
                 ->search($search)
+                ->withSum('votes', 'like')
+                ->withSum('votes', 'unlike')
                 ->paginate();
 
         return QuestionResource::collection($questions);
