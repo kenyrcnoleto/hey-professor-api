@@ -29,7 +29,7 @@ Route::get('my-questions/{status}', Question\MineController::class)->name('my-qu
 Route::get('questions', Question\IndexController::class)->name('questions.index');
 Route::post('questions', Question\StoreController::class)->name('questions.store');
 Route::post('questions', Question\StoreController::class)->name('questions.store');
-Route::get('questions/downlad', Question\DownloadController::class)->name('questions.download');
+Route::get('questions/download', Question\DownloadController::class)->name('questions.download');
 Route::delete('questions/{question}', Question\DeleteController::class)->name('questions.delete');
 Route::delete('questions/{question}/archive', Question\ArchiveController::class)->name('questions.archive');
 Route::put('questions/{question}/restore', Question\RestoreController::class)->name('questions.restore');
